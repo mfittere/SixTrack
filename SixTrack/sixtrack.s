@@ -1163,7 +1163,7 @@
 
 *     parameters for the parser
       integer getfields_n_max_fields, getfields_l_max_string
-      parameter ( getfields_n_max_fields = 20  ) ! max number of returned fields
+      parameter ( getfields_n_max_fields = 10  ) ! max number of returned fields
       parameter ( getfields_l_max_string = 161 ) ! max len of parsed line and its fields
                                                  ! (nchars in daten +1 to always make room for \0)
 
@@ -18420,14 +18420,20 @@ cc2008
       if(ierro.gt.0) call prror(-1)
       lineno3 = lineno3+1 ! Line number used for some crash output
 
-      if(ch(1:1).eq.'/') goto 2300 ! skip comment line
+      if(ch(1:1).eq.'/') goto 2300 ! skip comment lines
 
       if (ch(:4).eq.next) then
-         goto 110 ! loop BLOCK
+         goto 110 ! loop to next BLOCK in fort.3
       endif
  
       if(fma_numfiles.ge.fma_max) then
-        write(*,*) 'ERROR: you can only do ',fma_max,' number of FMAs'
++if cr
+        write(lout,*)
++ei
++if .not.cr
+        write(*,*)
++ei
+     &       'ERROR: you can only do ',fma_max,' number of FMAs'
         call prror(-1) 
       endif
 
@@ -18436,13 +18442,24 @@ cc2008
       call getfields_split( ch, getfields_fields, getfields_lfields,
      &        getfields_nfields, getfields_lerr )
       if ( getfields_lerr ) then
-        write(*,*) 'ERROR in FMA block: getfields_lerr='
-     & , getfields_lerr
++if cr
+        write(lout,*)
++ei
++if .not.cr
+        write(*,*)
++ei
+     &   'ERROR in FMA block: getfields_lerr=', getfields_lerr
         call prror(-1)
       endif
       if(getfields_nfields.ne.2) then
-        write(*,*) 'ERROR in FMA block: wrong number of input '         &
-     &    ,'parameters: ninput = ', getfields_nfields, ' != 2'
++if cr
+        write(lout,*)
++ei
++if .not.cr
+        write(*,*)
++ei
+     &        'ERROR in FMA block: wrong number of input '         &
+     &        ,'parameters: ninput = ', getfields_nfields, ' != 2'
         call prror(-1)
       endif
 
@@ -39708,7 +39725,7 @@ C     Convert r(1), r(2) from U(0,1) -> rvec0 as Gaussian with cutoff mcut (#sig
 !     always in main code
       ldumphighprec = .false.
       ldumpfront    = .false.
-      do i1=1,mper*mbloz
+      do i1=1,nblz
         do i2=1,6
           dump_clo(i1,i2)=0
           do i3=1,6

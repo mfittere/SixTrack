@@ -18448,7 +18448,7 @@ cc2008
 +if .not.cr
         write(*,*)
 +ei
-     &   'ERROR in FMA block: getfields_lerr=', getfields_lerr
+     &       'ERROR in FMA block: getfields_lerr=', getfields_lerr
         call prror(-1)
       endif
       if(getfields_nfields.ne.2) then
@@ -18458,8 +18458,8 @@ cc2008
 +if .not.cr
         write(*,*)
 +ei
-     &        'ERROR in FMA block: wrong number of input '         &
-     &        ,'parameters: ninput = ', getfields_nfields, ' != 2'
+     &       'ERROR in FMA block: wrong number of input ',
+     &       'parameters: ninput = ', getfields_nfields, ' != 2'
         call prror(-1)
       endif
 
@@ -26909,7 +26909,12 @@ C     Convert r(1), r(2) from U(0,1) -> rvec0 as Gaussian with cutoff mcut (#sig
   520 continue
 !     start fma
       if(fma_flag) then
-        write(*,*) 'Calling FMA_POSTPR'
++if cr
+        write(lout,*)'Calling FMA_POSTPR'
++ei
++if .not. cr
+        write(*,*)   'Calling FMA_POSTPR'
++ei
         call fma_postpr
       endif
 !--HPLOTTING END
@@ -39749,7 +39754,7 @@ C     Convert r(1), r(2) from U(0,1) -> rvec0 as Gaussian with cutoff mcut (#sig
       enddo
       fma_flag = .false.
       fma_numfiles = 0
-      do i=0,fma_max
+      do i=1,fma_max
         fma_nturn(i) = 0
         do j=1,getfields_l_max_string
           fma_fname(i)(j:j) = char(0)
@@ -57110,7 +57115,7 @@ c$$$            endif
 !hr06     xyzv(4)=xyzv(4)*(one+xyzv(6)+clop(3))
           xyzv(4)=xyzv(4)*((one+xyzv(6))+clop(3))                        !hr06
         endif
-!MF normalisation with t-matrix 56900
+!MF normalisation with t-matrix 56900 <-- KNS What does this number refer to??
         do 320 iq=1,6
           txyz(iq)=zero
           do 320 jq=1,6
@@ -58427,7 +58432,6 @@ c$$$            endif
       logical :: lopen              !flag to check if file is already open
       logical :: lexist             !flag to check if file fma_fname exists
       logical :: lread              !flag for file reading
-      character(len=maxstrlen) :: stringzerotrim
       character(len=getfields_l_max_string) :: ch,ch1
       integer, dimension(fma_npart_max,fma_nturn_max) :: turn 
       double precision, dimension(6,6) :: fma_tas_inv ! normalisation matrix = inverse of tas -> x_normalized=fma_tas_inv*x
@@ -58537,7 +58541,7 @@ c$$$            endif
 
 !    MF: dump amplitudes in dummy files for debugging (200101)
               open(200101+i*10,status='replace',iostat=ierro,           &
-     &action='write')!MF remove, nx,nx',ny,ny'
+     &action='write')!MF remove, nx,nx',ny,ny' <- KNS: GFORTRAN warning: Replacing file without specified name (from FILE specifier in open). Not fixing since this code will be deleted before merging into master.
 !    - write closed orbit in header of file with normalized phase space coordinates (200101+i*10)
 !      units: x,xp,y,yp,sig,dp/p = [mm,mrad,mm,mrad,1]
               write(200101+i*10,1987) adjustl('# closorb'),dump_clo(j,1)&

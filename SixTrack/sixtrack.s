@@ -58512,6 +58512,11 @@ c$$$            endif
 !    now we can start reading in the file
 !    - skip header
               do
+                 !KNS: Put an infinite-loop killer in this loop;
+                 ! i.e. increment some counter for each iteration,
+                 ! if it exceeds some ridiculous number (say 1000 comment lines),
+                 ! print an appropriately sarcastic error asking the user to contacting the devs,
+                 ! and exit the program.
                 read(dumpunit(j),'(A)',iostat=ierro) ch
                 call fma_error(ierro,'while reading file ' //           &
      &dump_fname(j),'fma_postpr')
@@ -58522,6 +58527,7 @@ c$$$            endif
 !   read in particle amplitudes
               fma_nturn(i) = dumplast(j)-dumpfirst(j)+1 !number of turns used for FFT
               if(fma_nturn(i).gt.fma_nturn_max) then
+                 !KNS: Very good to check it here as well, but why not check it sometime during initialization?
 +if .not.cr
                 write(*,*) 'ERROR in fma_postpr: only ',                &
      &fma_nturn_max,' turns allowed for fma and ',fma_nturn(i),' used!'

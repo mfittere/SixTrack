@@ -58504,6 +58504,7 @@ c$$$            endif
 !    then close + open for reading
               inquire(unit=dumpunit(j),opened=lopen)
               if(lopen) close(dumpunit(j))
+              ! KNS: If it isn't open, that would be a bug? Rather than opening it, print an error an exit.
               open(dumpunit(j),file=dump_fname(j),status='old',
      &iostat=ierro,action='read')
               call fma_error(ierro,'cannot open file '//trim(stringzero &
@@ -58568,6 +58569,7 @@ c$$$            endif
 !    - read in particle amplitudes a(part,turn), x,xp,y,yp,sigma,dE/E [mm,mrad,mm,mrad,mm,1]
               do k=1,fma_nturn(i) !loop over turns
                 do l=1,napx !loop over particles
+                  ! KNS: READ calls for floats are not compatible with CRLIBM.
                   read(dumpunit(j),*,iostat=ierro) id,turn(l,k),pos,    &
      &xyzv(1),xyzv(2),xyzv(3),xyzv(4),xyzv(5),xyzv(6),kt
                   if(ierro.gt.0) call fma_error(ierro,'while reading '  &
@@ -58674,6 +58676,14 @@ c$$$            endif
               close(200101+i*10)!MF remove
               close(dumpunit(j))
 !     Kyrre: resume position in dumpfile if file was open, otherwise close it
+!     KNS: This will only work correctly if the file is only used by a single element (un-checked);
+!          if not, the actual position is the sum of the dumpfilepos-es with that unit and file-name.
+!          This is described in the subroutine CRCHECK.
+!          Also, dumpfilepos is only used in case of CR; outside of the CR version,
+!          dumpfilepos is simply = -1.
+!          In your case, a better solution may simply be to read until you reach the end of the file
+!          (and then maybe backspace? Not sure.).
+!          You could also use the same counter as you use for anti-infinite-loop safeguarding above.
               if(lopen) then
                 open(dumpunit(j),file=dump_fname(j), status='old',      &
      &form='formatted',action='readwrite')
@@ -58683,9 +58693,12 @@ c$$$            endif
      &dump_fname(j),'fma_postpr')
                 enddo
               endif
-            endif
-          endif
-         enddo !END: loop over dump files
+              ! Here we may exit the loop over elements and skip to the next FMA file
+            endif !END: If the name matches (?)
+          endif !END: if (.not.lexist) (?)
+          !Here we may check if there are more names that maches, and if so, exit.
+          ! (only if we don't exit the loop above)
+        enddo !END: loop over dump files
       enddo !END: loop over fma files
       close(2001001)!MF remove
 

@@ -1164,7 +1164,7 @@
 
 *     parameters for the parser
       integer getfields_n_max_fields, getfields_l_max_string
-      parameter ( getfields_n_max_fields = 20  ) ! max number of returned fields
+      parameter ( getfields_n_max_fields = 10  ) ! max number of returned fields
       parameter ( getfields_l_max_string = 161 ) ! max len of parsed line and its fields
                                                  ! (nchars in daten +1 to always make room for \0)
 
@@ -18421,14 +18421,20 @@ cc2008
       if(ierro.gt.0) call prror(-1)
       lineno3 = lineno3+1 ! Line number used for some crash output
 
-      if(ch(1:1).eq.'/') goto 2300 ! skip comment line
+      if(ch(1:1).eq.'/') goto 2300 ! skip comment lines
 
       if (ch(:4).eq.next) then
-         goto 110 ! loop BLOCK
+         goto 110 ! loop to next BLOCK in fort.3
       endif
  
       if(fma_numfiles.ge.fma_max) then
-        write(*,*) 'ERROR: you can only do ',fma_max,' number of FMAs'
++if cr
+        write(lout,*)
++ei
++if .not.cr
+        write(*,*)
++ei
+     &       'ERROR: you can only do ',fma_max,' number of FMAs'
         call prror(-1) 
       endif
 
@@ -18437,13 +18443,24 @@ cc2008
       call getfields_split( ch, getfields_fields, getfields_lfields,
      &        getfields_nfields, getfields_lerr )
       if ( getfields_lerr ) then
-        write(*,*) 'ERROR in FMA block: getfields_lerr='
-     & , getfields_lerr
++if cr
+        write(lout,*)
++ei
++if .not.cr
+        write(*,*)
++ei
+     &       'ERROR in FMA block: getfields_lerr=', getfields_lerr
         call prror(-1)
       endif
       if(getfields_nfields.ne.2) then
-        write(*,*) 'ERROR in FMA block: wrong number of input '         &
-     &    ,'parameters: ninput = ', getfields_nfields, ' != 2'
++if cr
+        write(lout,*)
++ei
++if .not.cr
+        write(*,*)
++ei
+     &       'ERROR in FMA block: wrong number of input ',
+     &       'parameters: ninput = ', getfields_nfields, ' != 2'
         call prror(-1)
       endif
 
@@ -26893,7 +26910,12 @@ C     Convert r(1), r(2) from U(0,1) -> rvec0 as Gaussian with cutoff mcut (#sig
   520 continue
 !     start fma
       if(fma_flag) then
-        write(*,*) 'Calling FMA_POSTPR'
++if cr
+        write(lout,*)'Calling FMA_POSTPR'
++ei
++if .not. cr
+        write(*,*)   'Calling FMA_POSTPR'
++ei
         call fma_postpr
       endif
 !--HPLOTTING END
@@ -39709,7 +39731,7 @@ C     Convert r(1), r(2) from U(0,1) -> rvec0 as Gaussian with cutoff mcut (#sig
 !     always in main code
       ldumphighprec = .false.
       ldumpfront    = .false.
-      do i1=1,mper*mbloz
+      do i1=1,nblz
         do i2=1,6
           dump_clo(i1,i2)=0
           do i3=1,6
@@ -39733,7 +39755,7 @@ C     Convert r(1), r(2) from U(0,1) -> rvec0 as Gaussian with cutoff mcut (#sig
       enddo
       fma_flag = .false.
       fma_numfiles = 0
-      do i=0,fma_max
+      do i=1,fma_max
         fma_nturn(i) = 0
         do j=1,getfields_l_max_string
           fma_fname(i)(j:j) = char(0)
@@ -57094,7 +57116,7 @@ c$$$            endif
 !hr06     xyzv(4)=xyzv(4)*(one+xyzv(6)+clop(3))
           xyzv(4)=xyzv(4)*((one+xyzv(6))+clop(3))                        !hr06
         endif
-!MF normalisation with t-matrix 56900
+!MF normalisation with t-matrix 56900 <-- KNS What does this number refer to??
         do 320 iq=1,6
           txyz(iq)=zero
           do 320 jq=1,6
@@ -58483,6 +58505,7 @@ c$$$            endif
 !    then close + open for reading
               inquire(unit=dumpunit(j),opened=lopen)
               if(lopen) close(dumpunit(j))
+              ! KNS: If it isn't open, that would be a bug? Rather than opening it, print an error an exit.
               open(dumpunit(j),file=dump_fname(j),status='old',
      &iostat=ierro,action='read')
               call fma_error(ierro,'cannot open file '//trim(stringzero &
@@ -58491,6 +58514,11 @@ c$$$            endif
 !    now we can start reading in the file
 !    - skip header
               do
+                 !KNS: Put an infinite-loop killer in this loop;
+                 ! i.e. increment some counter for each iteration,
+                 ! if it exceeds some ridiculous number (say 1000 comment lines),
+                 ! print an appropriately sarcastic error asking the user to contacting the devs,
+                 ! and exit the program.
                 read(dumpunit(j),'(A)',iostat=ierro) ch
                 call fma_error(ierro,'while reading file ' //           &
      &dump_fname(j),'fma_postpr')
@@ -58501,6 +58529,7 @@ c$$$            endif
 !   read in particle amplitudes
               fma_nturn(i) = dumplast(j)-dumpfirst(j)+1 !number of turns used for FFT
               if(fma_nturn(i).gt.fma_nturn_max) then
+                 !KNS: Very good to check it here as well, but why not check it sometime during initialization?
 +if .not.cr
                 write(*,*) 'ERROR in fma_postpr: only ',                &
      &fma_nturn_max,' turns allowed for fma and ',fma_nturn(i),' used!'
@@ -58520,7 +58549,7 @@ c$$$            endif
 
 !    MF: dump amplitudes in dummy files for debugging (200101)
               open(200101+i*10,status='replace',iostat=ierro,           &
-     &action='write')!MF remove, nx,nx',ny,ny'
+     &action='write')!MF remove, nx,nx',ny,ny' <- KNS: GFORTRAN warning: Replacing file without specified name (from FILE specifier in open). Not fixing since this code will be deleted before merging into master.
 !    - write closed orbit in header of file with normalized phase space coordinates (200101+i*10)
 !      units: x,xp,y,yp,sig,dp/p = [mm,mrad,mm,mrad,1]
               write(200101+i*10,1987) adjustl('# closorb'),dump_clo(j,1)&
@@ -58541,6 +58570,7 @@ c$$$            endif
 !    - read in particle amplitudes a(part,turn), x,xp,y,yp,sigma,dE/E [mm,mrad,mm,mrad,mm,1]
               do k=1,fma_nturn(i) !loop over turns
                 do l=1,napx !loop over particles
+                  ! KNS: READ calls for floats are not compatible with CRLIBM.
                   read(dumpunit(j),*,iostat=ierro) id,turn(l,k),pos,    &
      &xyzv(1),xyzv(2),xyzv(3),xyzv(4),xyzv(5),xyzv(6),kt
                   if(ierro.gt.0) call fma_error(ierro,'while reading '  &
@@ -58647,6 +58677,14 @@ c$$$            endif
               close(200101+i*10)!MF remove
               close(dumpunit(j))
 !     Kyrre: resume position in dumpfile if file was open, otherwise close it
+!     KNS: This will only work correctly if the file is only used by a single element (un-checked);
+!          if not, the actual position is the sum of the dumpfilepos-es with that unit and file-name.
+!          This is described in the subroutine CRCHECK.
+!          Also, dumpfilepos is only used in case of CR; outside of the CR version,
+!          dumpfilepos is simply = -1.
+!          In your case, a better solution may simply be to read until you reach the end of the file
+!          (and then maybe backspace? Not sure.).
+!          You could also use the same counter as you use for anti-infinite-loop safeguarding above.
               if(lopen) then
                 open(dumpunit(j),file=dump_fname(j), status='old',      &
      &form='formatted',action='readwrite')
@@ -58656,9 +58694,12 @@ c$$$            endif
      &dump_fname(j),'fma_postpr')
                 enddo
               endif
-            endif
-          endif
-         enddo !END: loop over dump files
+              ! Here we may exit the loop over elements and skip to the next FMA file
+            endif !END: If the name matches (?)
+          endif !END: if (.not.lexist) (?)
+          !Here we may check if there are more names that maches, and if so, exit.
+          ! (only if we don't exit the loop above)
+        enddo !END: loop over dump files
       enddo !END: loop over fma files
       close(2001001)!MF remove
 

@@ -3654,89 +3654,89 @@ C,............................................................
       RETURN
 C.............................................................
       END
-CDECK  ID>, MERR.
-C=================================================================
-C GENERATES A SEQUENCE OF RANDOM ERRORS TO BE ASSIGNED TO
-C SPECIFIED ELEMENTS. THE ERRORS CAN BE ASSIGNED TO ZERO LENGTH
-C ELEMENTS ONLY, STARTING FROM THE QUADRUPOLAR COMPONENT.
-C MULTMI IS THE MINIMUM ORDER OF THE MULTIPOLAR COMPONENT TO BE
-C GENERATED.
-C MULTMA IS THE MAXIMUM ORDER OF THE MULTIPOLAR COMPONENT TO BE
-C GENERATED.
-C RADIUS IS THE RADIUS USED FOR THE ERROR MEASUREMENT. IT IS
-C EXPRESSED IN mm.
-C PHI IS THE BENDING ANGLE OF THE DIPOLE USED AS A REFERENCE FOR
-C THE ERROR EXPRESSED IN mrad.
-C BMEAN IS AN ARRAY CONTAINING THE SYSTEMATIC PART OF THE NORMAL
-C ERRORS.
-C BSIG IS AN ARRAY CONTAINING THE RANDOM PART OF THE NORMAL
-C ERRORS.
-C AMEAN IS AN ARRAY CONTAINING THE SYSTEMATIC PART OF THE SKEW
-C ERRORS.
-C ASIG IS AN ARRAY CONTAINING THE RANDOM PART OF THE SKEW ERRORS.
-C ISEED IS A SEED USED FOR THE RANDOM NUMBER GENERATOR.
-C IASSIGN IS A FLAG TO SPECIFY WHETHER THE GENERATED ERRORS HAVE
-C TO BE ASSIGNED TO A PHYSICAL ELEMENT OR TO A COMMON BLOCK FOR
-C SUBSEQUENT ANALYSIS (REORDERING).
-C IASSIGN = 0 THE ARRAY ERR IN THE COMMON BLOCK RANERR IS FILLED.
-C IASSIGN = 1 THE ERRORS ARE ASSIGNED TO THE PROPER MULTIPOLAR
-C ELEMENT.
-C ELEMENT IS A STRING CONTAINING THE NAME OF THE PHYSICAL
-C MAGNET WHO IS SUPPOSED TO BE AFFECTED BY THE GENERATED ERRORS.
-C
-C AUTHOR: M. GIOVANNOZZI - CERN & BOLOGNA UNIVERSITY
-C
- 
-      SUBROUTINE MERR(MULTMI,MULTMA,RADIUS,PHIDIP,BMEAN,BSIG,
-     .                AMEAN,ASIG,ISEED,IASSIGN,ELEMENT)
-      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
-      PARAMETER (NELE=80000,NLUMP=NELE/10)
-      CHARACTER*10 ELEMENT
-      DIMENSION BMEAN(10),BSIG(10),AMEAN(10),ASIG(10)
-      COMMON/RANERR/ERR(10,NELE,0:1),IND(NELE,10),IEL
-C.............................................................
-      IF (MULTMI.LT.0.OR.MULTMI.GT.MULTMA) THEN
-        WRITE(6,*) '***ERROR(MERR): FIRST PARAMETER OUT OF BOUNDS.'
-        STOP
-      ENDIF
-      IF (MULTMA.LT.0) THEN
-        WRITE(6,*) '***ERROR(MERR): SECOND PARAMETER OUT OF BOUNDS.'
-        STOP
-      ENDIF
-      IF (RADIUS.LT.0D0) THEN
-        WRITE(6,*) '***ERROR(MERR): SECOND PARAMETER OUT OF BOUNDS.'
-        STOP
-      ENDIF
-      IF (PHIDIP.LT.0D0) THEN
-        WRITE(6,*) '***ERROR(MERR): THIRD PARAMETER OUT OF BOUNDS.'
-        STOP
-      ENDIF
-      IF (ISEED.LT.0) THEN
-        WRITE(6,*) '***ERROR(MERR): NINETH PARAMETER OUT OF BOUNDS.'
-        STOP
-      ENDIF
-      IF (IASSIGN.NE.0.AND.IASSIGN.NE.1) THEN
-        WRITE(6,*) '***ERROR(MERR): TENTH PARAMETER OUT OF BOUNDS.'
-        STOP
-      ENDIF
-C.............................................................
-      KSEED=ISEED-1!..INITIALIZATION FOR RANDOM NUMBER GENERATION
-C.............................................................
-      DO MULT=MULTMI,MULTMA
-C.............................................................
-        KSEED=KSEED+1
-        CALL MRANERR(MULT,RADIUS,PHIDIP,BMEAN(MULT),BSIG(MULT),
-     .               0,KSEED,IASSIGN,ELEMENT)
-C.............................................................
-        KSEED=KSEED+1
-        CALL MRANERR(MULT,RADIUS,PHIDIP,AMEAN(MULT),ASIG(MULT),
-     .               1,KSEED,IASSIGN,ELEMENT)
-C.............................................................
-      ENDDO
-C.............................................................
-      RETURN
-C.............................................................
-      END
+c$$$CDECK  ID>, MERR.
+c$$$C=================================================================
+c$$$C GENERATES A SEQUENCE OF RANDOM ERRORS TO BE ASSIGNED TO
+c$$$C SPECIFIED ELEMENTS. THE ERRORS CAN BE ASSIGNED TO ZERO LENGTH
+c$$$C ELEMENTS ONLY, STARTING FROM THE QUADRUPOLAR COMPONENT.
+c$$$C MULTMI IS THE MINIMUM ORDER OF THE MULTIPOLAR COMPONENT TO BE
+c$$$C GENERATED.
+c$$$C MULTMA IS THE MAXIMUM ORDER OF THE MULTIPOLAR COMPONENT TO BE
+c$$$C GENERATED.
+c$$$C RADIUS IS THE RADIUS USED FOR THE ERROR MEASUREMENT. IT IS
+c$$$C EXPRESSED IN mm.
+c$$$C PHI IS THE BENDING ANGLE OF THE DIPOLE USED AS A REFERENCE FOR
+c$$$C THE ERROR EXPRESSED IN mrad.
+c$$$C BMEAN IS AN ARRAY CONTAINING THE SYSTEMATIC PART OF THE NORMAL
+c$$$C ERRORS.
+c$$$C BSIG IS AN ARRAY CONTAINING THE RANDOM PART OF THE NORMAL
+c$$$C ERRORS.
+c$$$C AMEAN IS AN ARRAY CONTAINING THE SYSTEMATIC PART OF THE SKEW
+c$$$C ERRORS.
+c$$$C ASIG IS AN ARRAY CONTAINING THE RANDOM PART OF THE SKEW ERRORS.
+c$$$C ISEED IS A SEED USED FOR THE RANDOM NUMBER GENERATOR.
+c$$$C IASSIGN IS A FLAG TO SPECIFY WHETHER THE GENERATED ERRORS HAVE
+c$$$C TO BE ASSIGNED TO A PHYSICAL ELEMENT OR TO A COMMON BLOCK FOR
+c$$$C SUBSEQUENT ANALYSIS (REORDERING).
+c$$$C IASSIGN = 0 THE ARRAY ERR IN THE COMMON BLOCK RANERR IS FILLED.
+c$$$C IASSIGN = 1 THE ERRORS ARE ASSIGNED TO THE PROPER MULTIPOLAR
+c$$$C ELEMENT.
+c$$$C ELEMENT IS A STRING CONTAINING THE NAME OF THE PHYSICAL
+c$$$C MAGNET WHO IS SUPPOSED TO BE AFFECTED BY THE GENERATED ERRORS.
+c$$$C
+c$$$C AUTHOR: M. GIOVANNOZZI - CERN & BOLOGNA UNIVERSITY
+c$$$C
+c$$$ 
+c$$$      SUBROUTINE MERR(MULTMI,MULTMA,RADIUS,PHIDIP,BMEAN,BSIG,
+c$$$     .                AMEAN,ASIG,ISEED,IASSIGN,ELEMENT)
+c$$$      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+c$$$      PARAMETER (NELE=80000,NLUMP=NELE/10)
+c$$$      CHARACTER*10 ELEMENT
+c$$$      DIMENSION BMEAN(10),BSIG(10),AMEAN(10),ASIG(10)
+c$$$      COMMON/RANERR/ERR(10,NELE,0:1),IND(NELE,10),IEL
+c$$$C.............................................................
+c$$$      IF (MULTMI.LT.0.OR.MULTMI.GT.MULTMA) THEN
+c$$$        WRITE(6,*) '***ERROR(MERR): FIRST PARAMETER OUT OF BOUNDS.'
+c$$$        STOP
+c$$$      ENDIF
+c$$$      IF (MULTMA.LT.0) THEN
+c$$$        WRITE(6,*) '***ERROR(MERR): SECOND PARAMETER OUT OF BOUNDS.'
+c$$$        STOP
+c$$$      ENDIF
+c$$$      IF (RADIUS.LT.0D0) THEN
+c$$$        WRITE(6,*) '***ERROR(MERR): SECOND PARAMETER OUT OF BOUNDS.'
+c$$$        STOP
+c$$$      ENDIF
+c$$$      IF (PHIDIP.LT.0D0) THEN
+c$$$        WRITE(6,*) '***ERROR(MERR): THIRD PARAMETER OUT OF BOUNDS.'
+c$$$        STOP
+c$$$      ENDIF
+c$$$      IF (ISEED.LT.0) THEN
+c$$$        WRITE(6,*) '***ERROR(MERR): NINETH PARAMETER OUT OF BOUNDS.'
+c$$$        STOP
+c$$$      ENDIF
+c$$$      IF (IASSIGN.NE.0.AND.IASSIGN.NE.1) THEN
+c$$$        WRITE(6,*) '***ERROR(MERR): TENTH PARAMETER OUT OF BOUNDS.'
+c$$$        STOP
+c$$$      ENDIF
+c$$$C.............................................................
+c$$$      KSEED=ISEED-1!..INITIALIZATION FOR RANDOM NUMBER GENERATION
+c$$$C.............................................................
+c$$$      DO MULT=MULTMI,MULTMA
+c$$$C.............................................................
+c$$$        KSEED=KSEED+1
+c$$$        CALL MRANERR(MULT,RADIUS,PHIDIP,BMEAN(MULT),BSIG(MULT),
+c$$$     .               0,KSEED,IASSIGN,ELEMENT)
+c$$$C.............................................................
+c$$$        KSEED=KSEED+1
+c$$$        CALL MRANERR(MULT,RADIUS,PHIDIP,AMEAN(MULT),ASIG(MULT),
+c$$$     .               1,KSEED,IASSIGN,ELEMENT)
+c$$$C.............................................................
+c$$$      ENDDO
+c$$$C.............................................................
+c$$$      RETURN
+c$$$C.............................................................
+c$$$      END
 CDECK  ID>, TUNEAPA.
 C=============================================================
 C COMPUTES THE TUNE AS THE AVERAGE PHASE ADVANCE ON A TWO
@@ -4918,176 +4918,176 @@ C MAGNET WHO IS SUPPOSED TO BE AFFECTED BY THE GENERATED ERRORS.
 C
 C AUTHOR: M. GIOVANNOZZI - CERN & BOLOGNA UNIVERSITY
 C
- 
-      SUBROUTINE MRANERR(NMULT,RADIUS,PHIDIP,RMEAN,SIGMA,ISKEW,ISEED,
-     .                   IASSIGN,ELEMENT)
-      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
-      PARAMETER (NELE=80000,NLUMP=NELE/10)
-      CHARACTER*10 ALBL,ELEMENT,STRING
-      DIMENSION R(4,4),TEMP(NELE)
-      COMMON/LATICE/IA(NELE),A(NELE,5),ALBL(NELE),IMAX
-      COMMON/ACCMAT/RA(4,4,0:NELE),IMAX2,IUPD,IUSE
-      COMMON/CSTRANS/CSM(4,4),CSMIN(4,4)
-      COMMON/RANERR/ERR(10,NELE,0:1),IND(NELE,10),IEL
-C.............................................................
-      IF (NMULT.LT.0.OR.NMULT.GT.10) THEN
-        WRITE(6,*) '***ERROR(MRANERR): FIRST PARAMETER OUT OF BOUNDS.'
-        STOP
-      ENDIF
-      IF (RADIUS.LT.0D0) THEN
-        WRITE(6,*) '***ERROR(MRANERR): SECOND PARAMETER OUT OF BOUNDS.'
-        STOP
-      ENDIF
-      IF (SIGMA.LT.0D0) THEN
-        WRITE(6,*) '***ERROR(MRANERR): FIFTH PARAMETER OUT OF BOUNDS.'
-        STOP
-      ENDIF
-      IF (ISKEW.NE.0.AND.ISKEW.NE.1) THEN
-        WRITE(6,*) '***ERROR(MRANERR): SIXTH PARAMETER OUT OF BOUNDS.'
-        STOP
-      ENDIF
-      IF (ISEED.LT.0) THEN
-        WRITE(6,*) '***ERROR(MRANERR): SEVENTH PARAMETER OUT OF BOUNDS.'
-        STOP
-      ENDIF
-      IF (IASSIGN.NE.0.AND.IASSIGN.NE.1) THEN
-        WRITE(6,*) '***ERROR(MRANERR): EIGHTH PARAMETER OUT OF BOUNDS.'
-        STOP
-      ENDIF
-C.............................................................
-      IEL=0         !..INITIALIZES THE NUMBER OF RANDOM ELEMENTS
-C.............................................................
-      DO J=1,9   !..CHECKS FOR TRAILING BLANK CHARACTERS IN ELEMENT
-        IF (ELEMENT(J:J).EQ.' '.AND.ELEMENT(J+1:J+1).NE.' ') THEN
-          L1=J+1
-          GOTO 10
-        ENDIF
-      ENDDO
-      L1=1
-  10  DO J=L1,9
-        IF (ELEMENT(J:J).NE.' '.AND.ELEMENT(J+1:J+1).EQ.' ') THEN
-          L2=J
-          GOTO 20
-        ENDIF
-      ENDDO
-      L2=10
-  20  CONTINUE
-C.............................................................
-      CALL CLTOU(ELEMENT(L1:L2))  !..CONVERTS TO UPPERCASE
-C.............................................................
-      STRING=ELEMENT(L1:L2)
-C.............................................................
-      DO JEL=1,IMAX
-C.............................................................
-        IF (INDEX(ALBL(JEL),STRING).NE.0) THEN
-C.............................................................
-          IF (IABS(IA(JEL)).EQ.1000) THEN !..THIN QUADRUPOLE
-C.............................................................
-            IF (NMULT.EQ.1) THEN    !..CHECKS THE CORRISPONDENCE
-C.............................................................
-              IEL=IEL+1
-              IND(IEL,NMULT)=JEL
-C.............................................................
-            ENDIF
-C.............................................................
-          ELSEIF (IABS(IA(JEL)).EQ.2000) THEN  !..MULTIPOLE
-C.............................................................
-            IF (INT(A(JEL,3)).EQ.NMULT.AND.NMULT.GT.1) THEN
-C.............................................................
-              IEL=IEL+1
-              IND(IEL,NMULT)=JEL
-C.............................................................
-            ENDIF
-C.............................................................
-          ELSEIF (IABS(IA(JEL)).EQ.(2000+NMULT)) THEN
-C.............................................................
-            IEL=IEL+1
-            IND(IEL,NMULT)=JEL
-C.............................................................
-          ELSE
-C.............................................................
-            WRITE(6,*) '***ERROR(MRANERR): SPECIFIED ELEMENT IS NOT OF',
-     .                 ' THE PROPER TYPE.'
-C.............................................................
-          ENDIF
-C.............................................................
-        ENDIF
-C.............................................................
-      ENDDO
-C.............................................................
-      IF (IEL.EQ.0) THEN  !..THE ELEMENT IS NOT PRESENT
-C.............................................................
-        WRITE(6,*) '***ERROR(MRANERR): SPECIFIED ELEMENT DOES NOT',
-     .             ' EXIST.'
-        RETURN
-C.............................................................
-      ELSE
-C.............................................................
-        IND(IEL+1,NMULT)=ISKEW
-C.............................................................
-      ENDIF
-C.............................................................
-      FACT=PHIDIP/(RADIUS**NMULT)
-      GRADMU=FACT*RMEAN
-      GRADSIG=FACT*SIGMA
-C.............................................................
-      IF (GRADSIG.GT.1D-20) THEN
-C.............................................................
-        CALL MGENRAN(ISEED,GRADMU,GRADSIG,IEL,3,TEMP)
-C.............................................................
-        DO IERR=1,IEL        !..COPIES TEMP IN ERR
-C.............................................................
-          ERR(NMULT,IERR,ISKEW)=TEMP(IERR)
-C.............................................................
-        ENDDO
-C.............................................................
-      ELSE
-C.............................................................
-        DO JERR=1,IEL
-C.............................................................
-          ERR(NMULT,JERR,ISKEW)=GRADMU
-C.............................................................
-        ENDDO
-C.............................................................
-      ENDIF
-C.............................................................
-  30  IF (IASSIGN.EQ.1) THEN
-C.............................................................
-        DO JEL=1,IEL
-C.............................................................
-          A(IND(JEL,NMULT),1+ISKEW)=ERR(NMULT,JEL,ISKEW)
-          IA(IND(JEL,NMULT))=IABS(IA(IND(JEL,NMULT)))
-C.............................................................
-        ENDDO
-C.............................................................
-C..THE ERRORS REFER TO LINEAR MULTIPOLAR COMPONENTS. THIS MEANS
-C..ALL THE CALCULATIONS FOR THE LINEAR OPTICS HAVE TO BE REDONE.
-C.............................................................
-        IMAX2=IMAX
-        CALL VFRESH2(R)        !..ACCUMULATES THE MATRICES
-C.............................................................
-        NLMAX2=0
-        LIMIT=2000
-        IKICK=107
-        CALL LUMPIT(NLMAX2,LIMIT,IKICK)   !..LUMPS THE LATTICE
-C.............................................................
-        IDIME=4
-        TOL=1D-6
-        NITER=50
-        CALL MCLORB(TOL,NITER,IDIME,IDEB) !..COMPUTES THE CLOSED ORBIT
-C.............................................................
-        IF (NMULT.EQ.1) THEN
-          CALL INPS(RA(1,1,IMAX),CSM)   !..COMPUTES THE C-S MAT.
-          CALL VISYMP(CSMIN,CSM)   !..COMPUTES THE INV. C-S MAT.
-        ENDIF
-C.............................................................
-        CALL LUMPINPS                     !..C-S COORDINATES
-C.............................................................
-      ENDIF
-C.............................................................
-      RETURN
-C.............................................................
-      END
+c$$$ 
+c$$$      SUBROUTINE MRANERR(NMULT,RADIUS,PHIDIP,RMEAN,SIGMA,ISKEW,ISEED,
+c$$$     .                   IASSIGN,ELEMENT)
+c$$$      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+c$$$      PARAMETER (NELE=80000,NLUMP=NELE/10)
+c$$$      CHARACTER*10 ALBL,ELEMENT,STRING
+c$$$      DIMENSION R(4,4),TEMP(NELE)
+c$$$      COMMON/LATICE/IA(NELE),A(NELE,5),ALBL(NELE),IMAX
+c$$$      COMMON/ACCMAT/RA(4,4,0:NELE),IMAX2,IUPD,IUSE
+c$$$      COMMON/CSTRANS/CSM(4,4),CSMIN(4,4)
+c$$$      COMMON/RANERR/ERR(10,NELE,0:1),IND(NELE,10),IEL
+c$$$C.............................................................
+c$$$      IF (NMULT.LT.0.OR.NMULT.GT.10) THEN
+c$$$        WRITE(6,*) '***ERROR(MRANERR): FIRST PARAMETER OUT OF BOUNDS.'
+c$$$        STOP
+c$$$      ENDIF
+c$$$      IF (RADIUS.LT.0D0) THEN
+c$$$        WRITE(6,*) '***ERROR(MRANERR): SECOND PARAMETER OUT OF BOUNDS.'
+c$$$        STOP
+c$$$      ENDIF
+c$$$      IF (SIGMA.LT.0D0) THEN
+c$$$        WRITE(6,*) '***ERROR(MRANERR): FIFTH PARAMETER OUT OF BOUNDS.'
+c$$$        STOP
+c$$$      ENDIF
+c$$$      IF (ISKEW.NE.0.AND.ISKEW.NE.1) THEN
+c$$$        WRITE(6,*) '***ERROR(MRANERR): SIXTH PARAMETER OUT OF BOUNDS.'
+c$$$        STOP
+c$$$      ENDIF
+c$$$      IF (ISEED.LT.0) THEN
+c$$$        WRITE(6,*) '***ERROR(MRANERR): SEVENTH PARAMETER OUT OF BOUNDS.'
+c$$$        STOP
+c$$$      ENDIF
+c$$$      IF (IASSIGN.NE.0.AND.IASSIGN.NE.1) THEN
+c$$$        WRITE(6,*) '***ERROR(MRANERR): EIGHTH PARAMETER OUT OF BOUNDS.'
+c$$$        STOP
+c$$$      ENDIF
+c$$$C.............................................................
+c$$$      IEL=0         !..INITIALIZES THE NUMBER OF RANDOM ELEMENTS
+c$$$C.............................................................
+c$$$      DO J=1,9   !..CHECKS FOR TRAILING BLANK CHARACTERS IN ELEMENT
+c$$$        IF (ELEMENT(J:J).EQ.' '.AND.ELEMENT(J+1:J+1).NE.' ') THEN
+c$$$          L1=J+1
+c$$$          GOTO 10
+c$$$        ENDIF
+c$$$      ENDDO
+c$$$      L1=1
+c$$$  10  DO J=L1,9
+c$$$        IF (ELEMENT(J:J).NE.' '.AND.ELEMENT(J+1:J+1).EQ.' ') THEN
+c$$$          L2=J
+c$$$          GOTO 20
+c$$$        ENDIF
+c$$$      ENDDO
+c$$$      L2=10
+c$$$  20  CONTINUE
+c$$$C.............................................................
+c$$$      CALL CLTOU(ELEMENT(L1:L2))  !..CONVERTS TO UPPERCASE
+c$$$C.............................................................
+c$$$      STRING=ELEMENT(L1:L2)
+c$$$C.............................................................
+c$$$      DO JEL=1,IMAX
+c$$$C.............................................................
+c$$$        IF (INDEX(ALBL(JEL),STRING).NE.0) THEN
+c$$$C.............................................................
+c$$$          IF (IABS(IA(JEL)).EQ.1000) THEN !..THIN QUADRUPOLE
+c$$$C.............................................................
+c$$$            IF (NMULT.EQ.1) THEN    !..CHECKS THE CORRISPONDENCE
+c$$$C.............................................................
+c$$$              IEL=IEL+1
+c$$$              IND(IEL,NMULT)=JEL
+c$$$C.............................................................
+c$$$            ENDIF
+c$$$C.............................................................
+c$$$          ELSEIF (IABS(IA(JEL)).EQ.2000) THEN  !..MULTIPOLE
+c$$$C.............................................................
+c$$$            IF (INT(A(JEL,3)).EQ.NMULT.AND.NMULT.GT.1) THEN
+c$$$C.............................................................
+c$$$              IEL=IEL+1
+c$$$              IND(IEL,NMULT)=JEL
+c$$$C.............................................................
+c$$$            ENDIF
+c$$$C.............................................................
+c$$$          ELSEIF (IABS(IA(JEL)).EQ.(2000+NMULT)) THEN
+c$$$C.............................................................
+c$$$            IEL=IEL+1
+c$$$            IND(IEL,NMULT)=JEL
+c$$$C.............................................................
+c$$$          ELSE
+c$$$C.............................................................
+c$$$            WRITE(6,*) '***ERROR(MRANERR): SPECIFIED ELEMENT IS NOT OF',
+c$$$     .                 ' THE PROPER TYPE.'
+c$$$C.............................................................
+c$$$          ENDIF
+c$$$C.............................................................
+c$$$        ENDIF
+c$$$C.............................................................
+c$$$      ENDDO
+c$$$C.............................................................
+c$$$      IF (IEL.EQ.0) THEN  !..THE ELEMENT IS NOT PRESENT
+c$$$C.............................................................
+c$$$        WRITE(6,*) '***ERROR(MRANERR): SPECIFIED ELEMENT DOES NOT',
+c$$$     .             ' EXIST.'
+c$$$        RETURN
+c$$$C.............................................................
+c$$$      ELSE
+c$$$C.............................................................
+c$$$        IND(IEL+1,NMULT)=ISKEW
+c$$$C.............................................................
+c$$$      ENDIF
+c$$$C.............................................................
+c$$$      FACT=PHIDIP/(RADIUS**NMULT)
+c$$$      GRADMU=FACT*RMEAN
+c$$$      GRADSIG=FACT*SIGMA
+c$$$C.............................................................
+c$$$      IF (GRADSIG.GT.1D-20) THEN
+c$$$C.............................................................
+c$$$        CALL MGENRAN(ISEED,GRADMU,GRADSIG,IEL,3,TEMP)
+c$$$C.............................................................
+c$$$        DO IERR=1,IEL        !..COPIES TEMP IN ERR
+c$$$C.............................................................
+c$$$          ERR(NMULT,IERR,ISKEW)=TEMP(IERR)
+c$$$C.............................................................
+c$$$        ENDDO
+c$$$C.............................................................
+c$$$      ELSE
+c$$$C.............................................................
+c$$$        DO JERR=1,IEL
+c$$$C.............................................................
+c$$$          ERR(NMULT,JERR,ISKEW)=GRADMU
+c$$$C.............................................................
+c$$$        ENDDO
+c$$$C.............................................................
+c$$$      ENDIF
+c$$$C.............................................................
+c$$$  30  IF (IASSIGN.EQ.1) THEN
+c$$$C.............................................................
+c$$$        DO JEL=1,IEL
+c$$$C.............................................................
+c$$$          A(IND(JEL,NMULT),1+ISKEW)=ERR(NMULT,JEL,ISKEW)
+c$$$          IA(IND(JEL,NMULT))=IABS(IA(IND(JEL,NMULT)))
+c$$$C.............................................................
+c$$$        ENDDO
+c$$$C.............................................................
+c$$$C..THE ERRORS REFER TO LINEAR MULTIPOLAR COMPONENTS. THIS MEANS
+c$$$C..ALL THE CALCULATIONS FOR THE LINEAR OPTICS HAVE TO BE REDONE.
+c$$$C.............................................................
+c$$$        IMAX2=IMAX
+c$$$        CALL VFRESH2(R)        !..ACCUMULATES THE MATRICES
+c$$$C.............................................................
+c$$$        NLMAX2=0
+c$$$        LIMIT=2000
+c$$$        IKICK=107
+c$$$        CALL LUMPIT(NLMAX2,LIMIT,IKICK)   !..LUMPS THE LATTICE
+c$$$C.............................................................
+c$$$        IDIME=4
+c$$$        TOL=1D-6
+c$$$        NITER=50
+c$$$        CALL MCLORB(TOL,NITER,IDIME,IDEB) !..COMPUTES THE CLOSED ORBIT
+c$$$C.............................................................
+c$$$        IF (NMULT.EQ.1) THEN
+c$$$          CALL INPS(RA(1,1,IMAX),CSM)   !..COMPUTES THE C-S MAT.
+c$$$          CALL VISYMP(CSMIN,CSM)   !..COMPUTES THE INV. C-S MAT.
+c$$$        ENDIF
+c$$$C.............................................................
+c$$$        CALL LUMPINPS                     !..C-S COORDINATES
+c$$$C.............................................................
+c$$$      ENDIF
+c$$$C.............................................................
+c$$$      RETURN
+c$$$C.............................................................
+c$$$      END
 CDECK  ID>, MGENRAN.
 C=================================================================
 C GENERATES A SEQUENCE OF GAUSSIAN RANDOM NUMBERS.
@@ -5106,60 +5106,60 @@ C
 C AUTHOR: M. GIOVANNOZZI - CERN & BOLOGNA UNIVERSITY
 C
  
-      SUBROUTINE MGENRAN(ISEED,RMEAN,SIGMA,IEL,NSIGMA,GAUSS)
-      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
-      PARAMETER (NELE=80000,NLUMP=NELE/10)
-      DIMENSION GAUSS(NELE)
-      REAL RVEC(NELE)
-C.............................................................
-      EXTERNAL RANLUX
-C.............................................................
-      IF (ISEED.LT.0) THEN
-        WRITE(6,*) '***ERROR(MGENRAN): FIRST PARAMETER OUT OF BOUNDS'
-        STOP
-      ENDIF
-      IF (SIGMA.LT.0D0) THEN
-        WRITE(6,*) '***ERROR(MGENRAN): THIRD PARAMETER OUT OF BOUNDS'
-        STOP
-      ENDIF
-      IF (IEL.LT.0.OR.IEL.GT.NELE) THEN
-        WRITE(6,*) '***ERROR(MGENRAN): FOURTH PARAMETER OUT OF BOUNDS'
-        STOP
-      ENDIF
-      IF (NSIGMA.LT.0) THEN
-        WRITE(6,*) '***ERROR(MGENRAN): FIFTH PARAMETER OUT OF BOUNDS'
-        STOP
-      ENDIF
-C.............................................................
-      IF (2*IEL.LT.NELE) THEN
-        ILEN=2*IEL            !..ACTUAL NUMBER OF RANDOM NUMBERS
-      ELSE
-        ILEN=NELE
-      ENDIF
-C.............................................................
-      LUX=4
-      CALL RLUXGO(LUX,ISEED,0,0)   !..INITIALIZES THE RANDOM SEQUENCE
- 10   CALL RNORMX(RVEC,ILEN,RANLUX) !..ACTUAL RANDOM NUMBER GENERATOR
-C.............................................................
-      IGAUSS=0
-      DO JLEN=1,ILEN
-        IF (IGAUSS.EQ.IEL) THEN
-          GOTO 20
-        ELSE
-          TEMP=SIGMA*RVEC(JLEN)+RMEAN
-          IF (DABS(TEMP-RMEAN).LT.SIGMA*NSIGMA) THEN
-            IGAUSS=IGAUSS+1
-            GAUSS(IGAUSS)=TEMP
-          ENDIF
-        ENDIF
-C.............................................................
-      ENDDO
-C.............................................................
-      GOTO 10
-C.............................................................
- 20   RETURN
-C.............................................................
-      END
+c$$$      SUBROUTINE MGENRAN(ISEED,RMEAN,SIGMA,IEL,NSIGMA,GAUSS)
+c$$$      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+c$$$      PARAMETER (NELE=80000,NLUMP=NELE/10)
+c$$$      DIMENSION GAUSS(NELE)
+c$$$      REAL RVEC(NELE)
+c$$$C.............................................................
+c$$$      EXTERNAL RANLUX
+c$$$C.............................................................
+c$$$      IF (ISEED.LT.0) THEN
+c$$$        WRITE(6,*) '***ERROR(MGENRAN): FIRST PARAMETER OUT OF BOUNDS'
+c$$$        STOP
+c$$$      ENDIF
+c$$$      IF (SIGMA.LT.0D0) THEN
+c$$$        WRITE(6,*) '***ERROR(MGENRAN): THIRD PARAMETER OUT OF BOUNDS'
+c$$$        STOP
+c$$$      ENDIF
+c$$$      IF (IEL.LT.0.OR.IEL.GT.NELE) THEN
+c$$$        WRITE(6,*) '***ERROR(MGENRAN): FOURTH PARAMETER OUT OF BOUNDS'
+c$$$        STOP
+c$$$      ENDIF
+c$$$      IF (NSIGMA.LT.0) THEN
+c$$$        WRITE(6,*) '***ERROR(MGENRAN): FIFTH PARAMETER OUT OF BOUNDS'
+c$$$        STOP
+c$$$      ENDIF
+c$$$C.............................................................
+c$$$      IF (2*IEL.LT.NELE) THEN
+c$$$        ILEN=2*IEL            !..ACTUAL NUMBER OF RANDOM NUMBERS
+c$$$      ELSE
+c$$$        ILEN=NELE
+c$$$      ENDIF
+c$$$C.............................................................
+c$$$      LUX=4
+c$$$      CALL RLUXGO(LUX,ISEED,0,0)   !..INITIALIZES THE RANDOM SEQUENCE
+c$$$ 10   CALL RNORMX(RVEC,ILEN,RANLUX) !..ACTUAL RANDOM NUMBER GENERATOR
+c$$$C.............................................................
+c$$$      IGAUSS=0
+c$$$      DO JLEN=1,ILEN
+c$$$        IF (IGAUSS.EQ.IEL) THEN
+c$$$          GOTO 20
+c$$$        ELSE
+c$$$          TEMP=SIGMA*RVEC(JLEN)+RMEAN
+c$$$          IF (DABS(TEMP-RMEAN).LT.SIGMA*NSIGMA) THEN
+c$$$            IGAUSS=IGAUSS+1
+c$$$            GAUSS(IGAUSS)=TEMP
+c$$$          ENDIF
+c$$$        ENDIF
+c$$$C.............................................................
+c$$$      ENDDO
+c$$$C.............................................................
+c$$$      GOTO 10
+c$$$C.............................................................
+c$$$ 20   RETURN
+c$$$C.............................................................
+c$$$      END
 CDECK  ID>, MSORT.
 C==================================================================
 C SORTS A SEQUENCE OF RANDOM ERROR ERRORS STORED IN THE COMMON
@@ -5173,51 +5173,51 @@ C
 C AUTHOR: M. GIOVANNOZZI - CERN & BOLOGNA UNIVERSITY
 C
  
-      SUBROUTINE MSORT(ISEED,MULTMI,MULTMA)
-      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
-      PARAMETER (NELE=80000)
-      DIMENSION TEMP0(NELE,10),TEMP1(NELE,10)
-      REAL TEMP2(1)
-      COMMON/RANERR/ERR(10,NELE,0:1),IND(NELE,10),IEL
-      COMMON/IPERM/KPERM(NELE)
-C.............................................................
-      KEL=0
-C.............................................................
-      ILEN=1
-      LUX=4
-      CALL RLUXGO(LUX,ISEED,0,0)  !..INITIALIZES RANDOM NUMBER SEQUENCE
-C.............................................................
-      DO I=1,100000
-        IF (KEL.EQ.IEL) GOTO 20
- 10     CALL RANLUX(TEMP2,ILEN)    !..RANDOM NUMBER GENERATOR
-        II=1+INT(IEL*TEMP2(1))
-        DO KK=1,KEL
-          IF (KPERM(KK).EQ.II) GOTO 10
-        ENDDO
-        KEL=KEL+1
-        KPERM(KEL)=II
-C.............................................................
-        DO MULT=MULTMI,MULTMA
-          TEMP0(KEL,MULT)=ERR(MULT,II,0)
-          TEMP1(KEL,MULT)=ERR(MULT,II,1)
-        ENDDO
-C.............................................................
-      ENDDO
-C.............................................................
- 20   DO MULT=MULTMI,MULTMA
-C.............................................................
-        DO JEL=1,IEL
-C.............................................................
-          ERR(MULT,JEL,0)=TEMP0(JEL,MULT)
-          ERR(MULT,JEL,1)=TEMP1(JEL,MULT)
-C.............................................................
-        ENDDO
-C.............................................................
-      ENDDO
-C.............................................................
-      RETURN
-C.............................................................
-      END
+c$$$      SUBROUTINE MSORT(ISEED,MULTMI,MULTMA)
+c$$$      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+c$$$      PARAMETER (NELE=80000)
+c$$$      DIMENSION TEMP0(NELE,10),TEMP1(NELE,10)
+c$$$      REAL TEMP2(1)
+c$$$      COMMON/RANERR/ERR(10,NELE,0:1),IND(NELE,10),IEL
+c$$$      COMMON/IPERM/KPERM(NELE)
+c$$$C.............................................................
+c$$$      KEL=0
+c$$$C.............................................................
+c$$$      ILEN=1
+c$$$      LUX=4
+c$$$      CALL RLUXGO(LUX,ISEED,0,0)  !..INITIALIZES RANDOM NUMBER SEQUENCE
+c$$$C.............................................................
+c$$$      DO I=1,100000
+c$$$        IF (KEL.EQ.IEL) GOTO 20
+c$$$ 10     CALL RANLUX(TEMP2,ILEN)    !..RANDOM NUMBER GENERATOR
+c$$$        II=1+INT(IEL*TEMP2(1))
+c$$$        DO KK=1,KEL
+c$$$          IF (KPERM(KK).EQ.II) GOTO 10
+c$$$        ENDDO
+c$$$        KEL=KEL+1
+c$$$        KPERM(KEL)=II
+c$$$C.............................................................
+c$$$        DO MULT=MULTMI,MULTMA
+c$$$          TEMP0(KEL,MULT)=ERR(MULT,II,0)
+c$$$          TEMP1(KEL,MULT)=ERR(MULT,II,1)
+c$$$        ENDDO
+c$$$C.............................................................
+c$$$      ENDDO
+c$$$C.............................................................
+c$$$ 20   DO MULT=MULTMI,MULTMA
+c$$$C.............................................................
+c$$$        DO JEL=1,IEL
+c$$$C.............................................................
+c$$$          ERR(MULT,JEL,0)=TEMP0(JEL,MULT)
+c$$$          ERR(MULT,JEL,1)=TEMP1(JEL,MULT)
+c$$$C.............................................................
+c$$$        ENDDO
+c$$$C.............................................................
+c$$$      ENDDO
+c$$$C.............................................................
+c$$$      RETURN
+c$$$C.............................................................
+c$$$      END
 CDECK  ID>, MWRIOPT.
 C==================================================================
 C WRITES THE LINEAR FUNCTIONS COMPUTED BY THE ROUTINE MLINOPT.
@@ -5377,14 +5377,14 @@ CDECK  ID>, MWRITIME.
 C===================================================================
 C WRITES THE USED CPU-TIME TO UNIT NU.
 C
- 
-      SUBROUTINE MWRITIME(NU,COMMENT)
-      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
-      CHARACTER*(*) COMMENT
-      WRITE(NU,'(A,F12.3,2A)')
-     .  ' ***MESSAGE(MWRITIME): ',TIMEM(0),' s   ',COMMENT
-      RETURN
-      END
+c$$$ 22/02/2016: Removed since it is never used.
+c$$$      SUBROUTINE MWRITIME(NU,COMMENT)
+c$$$      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+c$$$      CHARACTER*(*) COMMENT
+c$$$      WRITE(NU,'(A,F12.3,2A)')
+c$$$     .  ' ***MESSAGE(MWRITIME): ',TIMEM(0),' s   ',COMMENT
+c$$$      RETURN
+c$$$      END
 CDECK  ID>, TIMEM.
 C=================================================================
 C SYSTEM INDEPENDENT FUNCTION TO COMPUTE THE CPU-TIME ELAPSED
@@ -5396,36 +5396,36 @@ C      OTHERWISE IT RETURNS -1.
 C
 C AUTHOR: M. GIOVANNOZZI - CERN & BOLOGNA UNIVERSITY
 C
- 
-      DOUBLE PRECISION FUNCTION TIMEM(I)
-      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
-      REAL TMP
-      COMMON/ACCTIME/IFLAG
-C.............................................................
-      IF (I.NE.0) THEN
-        TIMEM=-1D0
-C.............................................................
-      ELSE
-C.............................................................
-        IF (IFLAG.NE.1) THEN  !..FIRST CALL
-C.............................................................
-          IFLAG=1
-          CALL TIMED(TMP)         !..CALL TO TIMING ROUTINE
-          TIMEM=0D0
-C.............................................................
-        ELSE
-C.............................................................
-          CALL TIMED(TMP)         !..CALL TO TIMING ROUTINE
-          TIMEM=TMP
-C.............................................................
-        ENDIF
-C.............................................................
-      ENDIF
-C.............................................................
-      RETURN
-C.............................................................
-      END
-CDECK  ID>, MQFACT.
+c$$$ 
+c$$$      DOUBLE PRECISION FUNCTION TIMEM(I)
+c$$$      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+c$$$      REAL TMP
+c$$$      COMMON/ACCTIME/IFLAG
+c$$$C.............................................................
+c$$$      IF (I.NE.0) THEN
+c$$$        TIMEM=-1D0
+c$$$C.............................................................
+c$$$      ELSE
+c$$$C.............................................................
+c$$$        IF (IFLAG.NE.1) THEN  !..FIRST CALL
+c$$$C.............................................................
+c$$$          IFLAG=1
+c$$$          CALL TIMED(TMP)         !..CALL TO TIMING ROUTINE
+c$$$          TIMEM=0D0
+c$$$C.............................................................
+c$$$        ELSE
+c$$$C.............................................................
+c$$$          CALL TIMED(TMP)         !..CALL TO TIMING ROUTINE
+c$$$          TIMEM=TMP
+c$$$C.............................................................
+c$$$        ENDIF
+c$$$C.............................................................
+c$$$      ENDIF
+c$$$C.............................................................
+c$$$      RETURN
+c$$$C.............................................................
+c$$$      END
+c$$$CDECK  ID>, MQFACT.
 C=================================================================
 C COMPUTES THE QUALITY FACTOR FOR AN ACCELERATOR STRUCTURE. THERE
 C ARE FOUR DIFFERENT CHOICES OF QUALITY FACTORS, AND THEY CAN BE
@@ -16977,3 +16977,59 @@ C      CALL INIZPRODO4(NA,NC-1,MAXD)
        ENDDO
        RETURN
        END
+
+*
+* $Id: cfft.F,v 1.1.1.1 1996/02/15 17:48:48 mclareni Exp $
+*
+* $Log: cfft.F,v $
+* Revision 1.1.1.1  1996/02/15 17:48:48  mclareni
+* Kernlib
+*
+      SUBROUTINE CFFT(A,MSIGN)
+      COMPLEX A(1),U,W,T
+      IF(MSIGN.EQ.0) RETURN
+      M=IABS(MSIGN)
+      N=2**M
+      NV2=N/2
+      NM1=N-1
+      J=1
+      DO 7 I=1,NM1
+      IF(I.GE.J) GO TO 5
+      T=A(J)
+      A(J)=A(I)
+      A(I)=T
+ 5    K=NV2
+ 6    IF(K.GE.J) GO TO 7
+      J=J-K
+      K=K/2
+      GO TO 6
+ 7    J=J+K
+      DO 8 I=1,N,2
+      T=A(I+1)
+      A(I+1)=A(I)-T
+ 8    A(I )=A(I)+T
+      IF(M.EQ.1) RETURN
+      C=0.
+      S=ISIGN(1,MSIGN)
+      LE=2
+      DO 20 L=2,M
+      W=CMPLX(C,S)
+      U=W
+      C=SQRT(C*.5+.5)
+      S=AIMAG(W)/(C+C)
+      LE1=LE
+      LE=LE1+LE1
+      DO 9 I=1,N,LE
+      IP=I+LE1
+      T=A(IP)
+      A(IP)=A(I)-T
+ 9    A(I) =A(I)+T
+      DO 20 J=2,LE1
+      DO 10 I=J,N,LE
+      IP=I+LE1
+      T=A(IP)*U
+      A(IP)=A(I)-T
+ 10   A(I) =A(I)+T
+ 20   U=U*W
+      RETURN
+      END

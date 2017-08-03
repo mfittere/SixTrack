@@ -6,6 +6,9 @@
 \usepackage{babel}
 \usepackage{lscape}
 \usepackage{hyperref}
+\usepackage{multirow}
+\usepackage[table]{xcolor}
+
 \makeatletter
 \@ifpackageloaded{tex4ht}{%
   \def\pgfsysdriver{pgfsys-tex4ht.def}%
@@ -1015,16 +1018,16 @@ f(r) =
 \end{equation}
 and
 \begin{equation}
-\theta_{\rm max} = \theta(R_2) = \frac{2LI_T(1\pm\beta_e\beta_p)}{4\pi\epsilon_0  \left(B\rho\right)_p\beta_e\beta_p c^2}\cdot\frac{1}{R_2}
+\theta_{\rm max} = \theta(R_2) = \frac{2LI_T(1\pm\beta_e\beta_p)}{4\pi\epsilon_0  \cdot \left(\frac{q}{p_0}\right)_p \cdot \beta_e\beta_p c^2}\cdot\frac{1}{R_2}
 \end{equation}
-where $L$ is the length of the e-lens, $I_T$ the total electron beam current, $\beta_{e}$ and $\beta_{p}$ the relativistic $\beta$ of electron and proton beam, $B\rho$ the magnetic rigidity, $c$ the speed of light and $\epsilon_0$ the vacuum permittivity. The $\pm$-sign represents the two cases of the electron beam traveling in the direction of the proton beam ($v_e v_p>0$) leading to ``$-$" or in the opposite direction ($v_e v_p<0$) leading to ``$+$". For hollow electron beam collimation, electron and proton beam travel in opposite directions.
+where $L$ is the length of the e-lens, $I_T$ the total electron beam current, $\beta_{e}$ and $\beta_{p}$ the relativistic $\beta$ of electron and proton beam, $\frac{q}{p_0}=\left(B\rho\right)_p$ the magnetic rigidity for the reference particle, $c$ the speed of light and $\epsilon_0$ the vacuum permittivity. The $\pm$-sign represents the two cases of the electron beam traveling in the direction of the proton beam ($v_e v_p>0$) leading to ``$-$" or in the opposite direction ($v_e v_p<0$) leading to ``$+$". For hollow electron beam collimation, electron and proton beam travel in opposite directions.
 
-The kick in $(x',y')$ can then be expressed as (note $\frac{x}{r}=\cos(\phi),\frac{y}{r}=\sin(\phi)$):
+The kick in $(p_x,p_y)$ can then be expressed as (note $\frac{x}{r}=\cos(\phi),\frac{y}{r}=\sin(\phi)$):
 \begin{align}
-x'&=x'-\theta_{\rm max}\cdot\frac{R_2}{r^2}\cdot f(r)\cdot x \cdot \frac{1}{1+\delta}\label{elense:eqn:1}\\
-y'&=y'-\theta_{\rm max}\cdot\frac{R_2}{r^2}\cdot f(r)\cdot y \cdot \frac{1}{1+\delta}\label{elense:eqn:2}
+p_x&=p_x-\theta_{\rm max}\cdot\frac{R_2}{r^2}\cdot f(r)\cdot x\label{elense:eqn:1}\\
+p_y&=p_y-\theta_{\rm max}\cdot\frac{R_2}{r^2}\cdot f(r)\cdot y\label{elense:eqn:2}
 \end{align}
-The maximum kick angle $\theta_{\max}$ depends on the magnetic rigidity $(B\rho)_p$ of the proton beam and thus on the particle momentum. For off-momentum particles this results in a factor $(B\rho)(\delta) = (B\rho)(0)\cdot(1+\delta)$ which has been added in Eqn.~\ref{elense:eqn:1}--\ref{elense:eqn:2}. If the electron lens is offset by $(x_{\rm offset},y_{\rm offset})$, the coordinates $(x,y)$ are simply transfered to:
+If the electron lens is offset by $(x_{\rm offset},y_{\rm offset})$, the coordinates $(x,y)$ are simply transfered to:
 \begin{align}
 \tilde x&=x+x_{\rm offset}\\
 \tilde y&=y+y_{\rm offset}\\
@@ -1032,22 +1035,86 @@ The maximum kick angle $\theta_{\max}$ depends on the magnetic rigidity $(B\rho)
 \end{align}
 and the kick is then given by:
 \begin{align}
-x'&=x'-\theta_{\rm max}\cdot\frac{R_2}{\tilde r^2}\cdot f(\tilde r)\cdot \tilde x\cdot\frac{1}{1+\delta}\\
-y'&=y'-\theta_{\rm max}\cdot\frac{R_2}{\tilde r^2}\cdot f(\tilde r)\cdot \tilde y\cdot\frac{1}{1+\delta}
+p_x&=p_x-\theta_{\rm max}\cdot\frac{R_2}{\tilde r^2}\cdot f(\tilde r)\cdot \tilde x\\
+p_y&=p_y-\theta_{\rm max}\cdot\frac{R_2}{\tilde r^2}\cdot f(\tilde r)\cdot \tilde y
 \end{align}
 This idealized implementation of the hollow e-lens has no explicit dependence on the particle energy. The particle energy is only taken into account in form of the input parameter $\theta_{\rm max}$ provided by the user. A change of the particle energy could occur if the particle enters with an initial $x'$ or $y'$ and thus sees an accelerating or respectively decelerating field.
 
-\subsection{Misalignment}
+\subsubsection{Hollow electron lens - bends}
+A symplectic map of the hollow electron lens bends has been developed for the LHC electron lens in \cite{stancari_bends}. The calculation was performed for the LHC optics and e-lens parameters based on the first prototype for an LHC hollow e-gun (see first paragraph). The kick can be however rescaled accordingly for the updated e-lens parameters (see second paragraph). We only state the most important equations here and for a derivation it is referred to \cite{stancari_bends}.
 
-Misalignments of elements affects the coordinates at the entrance of an
-element as follows
+\paragraph{Symplectic kick map for e-lens bends}
+For the derivation, the parameters listed in Table~\ref{elense:tab:1} are assumed for the circulating proton beam and the hollow electron lens. We will show later how to rescale these parameters.
+\begin{table}[h]
+	\begin{center}
+		\caption{Proton and hollow electron lens parameters assumed for the initial calculation of the bends.}
+		\label{elense:tab:1}
+		\begin{tabular}{|l | c|}
+			\hline
+			\rowcolor{blue!30}
+			\multicolumn{2}{c}{proton beam} \\\hline
+			\rowcolor{blue!15}
+			Parameter & Value \\\hline
+	        beam energy $E_p$ & 7~TeV\\\hline
+	        normalized emittance $\epsilon$ & 3.75~$\mu$m\\\hline
+	        $\beta_{x,y}$ at e-lens & 200~m\\\hline
+			dispersion $D_{x,y}$ at e-lens & 0~m\\\hline
+			beam size at e-lens $\sigma_p$ & 317~$\mu$m\\\hline
+			\rowcolor{blue!30}
+			\multicolumn{2}{c}{hollow electron beam} \\\hline
+			\rowcolor{blue!15}
+			Parameter & Value \\\hline
+			beam energy $E_e$ & 5~keV\\\hline
+			current $I_e$ & 1~A\\\hline
+			ratio $R_{\mathrm{rat}}$ inner/outer radius $\frac{R_2}{R_1}=\frac{12.7~\mathrm{mm}}{6.75~\mathrm{mm}}$ & 1.8815 \\\hline
+			outer radius $R_2$ & 2.386~mm\\\hline
+			inner radius $R_1=R_2/R_{\mathrm{rat}}=4\sigma_p$ & 1.268~mm\\\hline		
+		\end{tabular}
+	\end{center}
+\end{table}
+Furthermore, the electron beam is represented by a cylindrical pipe with a curvature radius of $R=0.7$~m. The bent tube of electrons spans a bend angle of $\theta=30~\mathrm{deg}$ (see Fig.~\ref{elense:fig:1}).
+\begin{figure}[t!]
+	\centering
+	\includegraphics[width=1.0\linewidth]{HEL_bends_warp.png}
+	\caption{Conductor geometry and calculated electrostatic potential on the plane of the end electron distribution. The contour lines are marked with the potential in kV.\label{elense:fig:1}}
+\end{figure}
+For the calculation of the electrostatic field a multigrid Poisson solver within the Warp particle-in-cell code \cite{warp} is used. The fine mesh aiming at a precise calculation of the field in the region of the core and halo is extended in a region of interest of $|x|\leq 10\sigma_p$ and $|y|\leq 10\sigma_p$ with a fixed $10\sigma_p=3.17~$mm (see Table~\ref{elense:tab:1}). Only transverse kicks are considered, as the longitudinal kicks of two symmetric bends cancel out for high-energy protons. The transverse kicks on the other hand add up in case of an U-shape of the e-lens and act in opposite directions in case of an S-shape. As the phase advance of the hollow electron lens is usually small, the position variation of the protons over the length of the bends is neglected. Also the contribution from magnetic fields is neglected. In this case the transverse kick is given by:
+\begin{eqnarray}
+\Delta x' &=& \frac{1}{(B\rho)_p\cdot (\beta_p c)}\int_{z_1}^{z_2}E_{x}(x,y,z)dz=: \frac{1}{(B\rho)_p\cdot (\beta_p c)}\cdot k_x(x,y)\\
+\Delta y' &=& \frac{1}{(B\rho)_p\cdot (\beta_p c)}\int_{z_1}^{z_2}E_{y}(x,y,z)dz=: \frac{1}{(B\rho)_p\cdot (\beta_p c)}\cdot k_y(x,y)
+\end{eqnarray}
+where $\beta_p$ is the relativistic $\beta$ and $B\rho$ the magnetic rigidity of the proton beam, and $z$ parameterizes the proton trajectory. In \cite{stancari_bends} an analytical symplectic parameterization of the integrated electric fields $k_{x,y}(x,y)$ is derived. To obtain the analytical expression, the integrated electric potential is parametrized in terms of the tensor product of Chebyshev polynomials of the first kind up to order $N=18$:
+\begin{equation}
+V(x,y)=\int_{z_1}^{z_2}\phi(x,y,z)dz=\sum_{n=0}^N\sum_{j=0}^{n}C_{j,(n-j)}\cdot T_j\left(\frac{x}{a}\right)\cdot T_{n-j}\left(\frac{y}{a}\right)
+\end{equation}
+where $C_{jl}$ are $(N+1)(N+2)/2$ dimensional coefficients (in units $\mathrm{V\cdot m}$) and $T_n$ are Chebyshev polynomials of order $n$. The kicks are then obtained by derivation of the integrated potential:
+\begin{eqnarray}
+k_x(x,y) &=& -\frac{\partial V}{\partial x}\\
+k_y(x,y) &=& -\frac{\partial V}{\partial y}
+\end{eqnarray}
+Chebyshev polynomials are only defined within the unit interval $u\in[-1,1]$. For the interpolation, the coordinates $x$ and $y$ are therefore expressed in units of an arbitrary length scale, here $a=10\sigma_p=1.33\cdot R_2=3.2~$mm to ensure that the argument of the polynomials is contained within the unit interval.
+
+
+\textcolor{red}{add Dependence on angle. }
+
+\paragraph{Scaling with electron lens parameters}
+The symplectic kick map developed for the parameters listed in Table~\ref{elense:tab:1} can be scaled to different electron and proton beam parameters, however with certain limitations:
+\begin{enumerate}
+	\item \textbf{Scaling with outer radius $R_2$:} The map is scalable with $R_2$ under the following two conditions:
+	\begin{enumerate}
+		\item only valid for fixed $\frac{R_2}{R_1}=1.8815$\footnote{ The map has been developed for a fixed ratio between inner radius $R_1$ and outer radius $R_2$ of the electron lens of $\frac{R_2}{R_1}=\frac{12.7~\mathrm{mm}}{6.75~\mathrm{mm}}=1.8815$. A change of this ratio would entail a change of the coefficients of the Chebyshev polynamials.}
+		\item only valid for amplitudes $x,y \leq a=1.33\cdot R_2$\footnote{ As the Chebyshev polynomials are only defined on the unit interval, the coordinates $x$ and $y$ are normalized by a reference length scale chosen to be $a=1.33\cdot R_2$.  Outside of this length scale the map is not valid. For the parameters in Table~\ref{elense:tab:1}, $a=1.33\cdot R_2$ corresponds to about 10~$\sigma_p$.}
+	\end{enumerate}
+	\item \textbf{Scaling with electron beam current and energy:}
+\end{enumerate}
+
+\subsection{Misalignment}
+Misalignments of elements affects the coordinates at the entrance of an element as follows
 \begin{align}
     x &\to (x-x_s)\cdot t_c + (y-y_s)\cdot t_s \\
     y &\to -(x-x_s)\cdot t_s + (y-y_s)\cdot t_c,
 \end{align}
-where $x_s$ and $y_s$ are the displacements in the horizontal and vertical
-directions, respectively. $t_c$ and $t_s$ are the cosine and sine of the tilt
-angle for the element.
+where $x_s$ and $y_s$ are the displacements in the horizontal and vertical directions, respectively. $t_c$ and $t_s$ are the cosine and sine of the tilt angle for the element.
 
 \section{Optics calculations}
 \label{opt}

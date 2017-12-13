@@ -240,7 +240,7 @@
       parameter(c1m18 = 1.0d-18,c1m21 = 1.0d-21,c1m24 = 1.0d-24)
       parameter(c1m36 = 1.0d-36,c1m38 = 1.0d-38)
 !     electron mass from PDG, 2002
-      parameter(pmap = 938.271998d0,pmae = .510998902d0)
+      parameter(pmap = 89317.6463413d0,pmae = .510998902d0)
       parameter(crade = 2.817940285d-15, clight = 2.99792458d8)
 +cd parbeam
       integer idim,kstep,nx,ny
